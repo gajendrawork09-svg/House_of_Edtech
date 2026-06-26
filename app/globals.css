@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-:root {
+/* :root {
   --background: #ffffff;
   --foreground: #171717;
 }
@@ -23,4 +23,55 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+} */
+.editor-content .ProseMirror {
+  min-height: 1000px;
+  padding: 64px;
+  outline: none;
+  font-size: 18px;
+  line-height: 1.8;
+  color: #1e293b;
+}
+
+.editor-content .ProseMirror h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.editor-content .ProseMirror h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 1rem 0;
+}
+
+.editor-content .ProseMirror h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.editor-content .ProseMirror p {
+  margin: 0.75rem 0;
+}
+
+.editor-content .ProseMirror ul,
+.editor-content .ProseMirror ol {
+  padding-left: 1.5rem;
+}
+
+.editor-content .ProseMirror blockquote {
+  border-left: 4px solid #d1d5db;
+  padding-left: 1rem;
+  color: #6b7280;
+  margin: 1rem 0;
+}
+
+.editor-content .ProseMirror code {
+  background: #f3f4f6;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.editor-content .ProseMirror:focus {
+  outline: none;
 }

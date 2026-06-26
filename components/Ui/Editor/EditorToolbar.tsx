@@ -1,0 +1,103 @@
+"use client";
+
+import { Divider } from "antd";
+
+import {
+  BoldOutlined,
+  ItalicOutlined,
+  UnderlineOutlined,
+  UndoOutlined,
+  RedoOutlined,
+  StrikethroughOutlined,
+  LinkOutlined,
+  PictureOutlined,
+  OrderedListOutlined,
+  UnorderedListOutlined,
+  CodeOutlined,
+} from "@ant-design/icons";
+import ToolbarButton from "../Button/ToolbarButton";
+
+
+
+const EditorToolbar = () => {
+  return (
+    <div className="sticky top-16 z-40 flex items-center gap-2 border-b bg-white px-4 py-2 shadow-sm">
+
+      {/* Undo / Redo */}
+
+      <ToolbarButton
+        title="Undo"
+        icon={<UndoOutlined />}
+      />
+
+      <ToolbarButton
+        title="Redo"
+        icon={<RedoOutlined />}
+      />
+
+      <Divider type="vertical" />
+
+      {/* Formatting */}
+
+      <ToolbarButton
+        title="Bold"
+        icon={<BoldOutlined />}
+      />
+
+      <ToolbarButton
+        title="Italic"
+        icon={<ItalicOutlined />}
+      />
+
+      <ToolbarButton
+        title="Underline"
+        icon={<UnderlineOutlined />}
+      />
+
+      <ToolbarButton
+        title="Strike"
+        icon={<StrikethroughOutlined />}
+      />
+
+      <Divider type="vertical" />
+
+      {/* Lists */}
+
+      <ToolbarButton
+        title="Bullet List"
+        icon={<UnorderedListOutlined />}
+      />
+
+      <ToolbarButton
+        title="Numbered List"
+        icon={<OrderedListOutlined />}
+      />
+
+      <Divider type="vertical" />
+
+      {/* Link */}
+
+      <ToolbarButton
+        title="Insert Link"
+        icon={<LinkOutlined />}
+      />
+
+      {/* Image */}
+
+      <ToolbarButton
+        title="Insert Image"
+        icon={<PictureOutlined />}
+      />
+
+      {/* Code */}
+
+      <ToolbarButton
+        title="Code Block"
+        icon={<CodeOutlined />}
+      />
+
+    </div>
+  );
+};
+
+export default EditorToolbar;
