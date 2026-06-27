@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import DashBoard from './DashBoard';
+import { createDocument } from '@/src/lib/api/document.api';
 
 
 const DashBoardClient = () => {
@@ -18,26 +19,20 @@ const DashBoardClient = () => {
 
   // Handler for creating a new document
   const handleCreateDocument = async () => {
-    setIsCreating(true);
-    try {
-      // 1. You would normally trigger your backend POST request here:
-      // const res = await fetch('/api/documents', { method: 'POST' });
-      // const newDoc = await res.json();
-      
-      // Simulating network delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      
-      const mockNewId = `doc-${Date.now()}`; 
-      console.log('Document created with ID:', mockNewId);
+  setIsCreating(true);
 
-      // 2. Automatically push the route context straight into the Editor page
-      router.push(`/editor/${mockNewId}`);
-    } catch (error) {
-      console.error('Failed to create document:', error);
-    } finally {
-      setIsCreating(false);
-    }
-  };
+  try {
+    const response = await createDocument();
+
+    console.log(response);
+
+    router.push(`/editor/${response.data.id}`);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setIsCreating(false);
+  }
+};
 
   // Handler for clicking on an existing document item
   const handleOpenDocument = (id: string) => {

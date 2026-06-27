@@ -22,4 +22,23 @@ model User {
   image     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  documents Document[]
+}
+
+/*=================================== Document MODEL ======================================*/
+model Document {
+  id         String   @id @default(cuid())
+
+  title      String
+  content    Json?
+
+  ownerId    String
+  owner       User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  isArchived Boolean  @default(false)
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([ownerId])
 }
