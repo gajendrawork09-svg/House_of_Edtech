@@ -57,3 +57,25 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+export async function GET() {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Unauthorized",
+      },
+      { status: 401 }
+    );
+  }
+
+  const documents = await documentService.getDocuments(
+    session.user.id
+  );
+
+  return NextResponse.json({
+    success: true,
+    data: documents,
+  });
+}

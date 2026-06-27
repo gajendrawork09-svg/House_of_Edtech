@@ -7,7 +7,10 @@ import EditorContent from './EditorContent'
 import { useEditor } from '@tiptap/react'
 import VersionHistoryDrawer from './VersionHistoryDrawer'
 import Footer from '../Footer/Footer'
-const Editior = () => {
+interface EditorProps {
+  documentId: string;
+}
+const Editior = ({ documentId }: EditorProps) => {
     const editor = useEditor({
     extensions: [StarterKit],
     content: '<p>Hello World! 🌎️</p>',

@@ -10,4 +10,16 @@ export class DocumentService {
   ) {
     return this.repository.create(data, ownerId);
   }
+  async getDocuments(ownerId: string) {
+  return this.repository.findAllByOwner(ownerId);
+}
+async getDocumentById(id: string) {
+  const document = await this.repository.findById(id);
+
+  if (!document) {
+    throw new Error("Document not found");
+  }
+
+  return document;
+}
 }

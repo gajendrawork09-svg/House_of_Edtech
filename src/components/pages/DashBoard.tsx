@@ -1,8 +1,8 @@
 "use client";
 
 import React from 'react';
-import { Button, Card, List, Typography, Space, Tag } from 'antd';
-import { PlusOutlined, FileTextOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { Button, Typography, Space } from 'antd';
+import { PlusOutlined, FileTextOutlined, ClockCircleOutlined, MoreOutlined } from '@ant-design/icons';
 
 const { Title, Text } = Typography;
 
@@ -19,84 +19,107 @@ interface DashboardUIProps {
   isCreating: boolean;
 }
 
-
-const DashBoard = ({documents, 
-  onCreateDocument, 
-  onOpenDocument, 
-  isCreating } : DashboardUIProps) => {
+export default function DashBoard({
+  documents,
+  onCreateDocument,
+  onOpenDocument,
+  isCreating
+}: DashboardUIProps) {
   return (
-     <div className="min-h-screen bg-gray-50 text-gray-900">
+    <div className="min-h-screen bg-gray-50 text-gray-900 font-sans">
       
-      {/* Top Navigation Bar */}
-      <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between sticky top-0 z-10">
-        <Space size="middle">
-          <FileTextOutlined className="text-blue-600 text-2xl" />
-          <Title level={4} style={{ margin: 0, fontWeight: 600 }}>Docs Dashboard</Title>
-        </Space>
+      {/* 1. Header (Google Docs Minimal Style) */}
+      <header className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between sticky top-0 z-10">
+        <div className="flex items-center space-x-3">
+          <div className="bg-blue-600 p-2 rounded-md flex items-center justify-center">
+            <FileTextOutlined className="text-white text-xl" />
+          </div>
+          <span className="text-xl font-medium tracking-tight text-gray-700">Docs</span>
+        </div>
+        
         <Button 
           type="primary" 
           icon={<PlusOutlined />} 
           loading={isCreating}
           onClick={onCreateDocument}
-          size="large"
-          className="bg-blue-600 hover:bg-blue-700"
+          className="bg-blue-600 hover:bg-blue-700 shadow-sm font-medium rounded-full h-10 px-5"
         >
-          New Document
+          Blank Document
         </Button>
       </header>
 
-      {/* Main Content Dashboard Area */}
-      <main className="max-w-5xl mx-auto px-4 py-8">
-        
-        {/* Quick Start Panel (Like Google Docs top strip) */}
-        <div className="mb-8">
-          <Title level={5} className="text-gray-500 mb-4">Start a new document</Title>
-          <Card 
-            hoverable 
-            className="w-40 h-48 flex flex-col items-center justify-center border-dashed border-2 border-gray-300 hover:border-blue-500 transition-colors"
-            onClick={onCreateDocument}
-          >
-            <div className="flex flex-col items-center text-center space-y-2">
-              <PlusOutlined className="text-3xl text-blue-500" />
-              <Text strong>Blank Doc</Text>
-            </div>
-          </Card>
-        </div>
-
-        {/* Recent Documents Section */}
-        <div>
-          <Title level={4} className="mb-4">Recent documents</Title>
+      {/* 2. Top Section: Start New Document (Gray Grid Strip) */}
+      <section className="bg-gray-100 border-b border-gray-200 py-8 px-6">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-sm font-medium text-gray-600 mb-4">Start a new document</h2>
           
-          <Card style={{ padding: 0 }} className="shadow-sm border border-gray-200">
-            <List
-              itemLayout="horizontal"
-              dataSource={documents}
-              locale={{ emptyText: 'No documents found. Create one to get started!' }}
-              renderItem={(doc) => (
-                <List.Item 
-                  className="hover:bg-gray-50 cursor-pointer transition-colors px-6 py-4"
-                  onClick={() => onOpenDocument(doc.id)}
-                >
-                  <List.Item.Meta
-                    avatar={<FileTextOutlined className="text-blue-500 text-xl mt-1" />}
-                    title={<Text className="font-medium hover:text-blue-600 text-base">{doc.title}</Text>}
-                    description={
-                      <Space className="text-xs text-gray-400 mt-1">
-                        <ClockCircleOutlined />
-                        <span>Opened {doc.updatedAt}</span>
-                      </Space>
-                    }
-                  />
-                  <Tag color="blue">Owner</Tag>
-                </List.Item>
-              )}
-            />
-          </Card>
+          {/* Flex/Grid Blank Template Container */}
+          <div className="flex">
+            <div 
+              onClick={onCreateDocument}
+              className="group cursor-pointer"
+            >
+              <div className="w-36 h-48 bg-white border border-gray-300 rounded-md shadow-sm hover:border-blue-500 transition-all flex items-center justify-center overflow-hidden bg-no-repeat bg-center">
+                <PlusOutlined className="text-4xl text-red-500 group-hover:scale-110 transition-transform" />
+              </div>
+              <p className="mt-2 text-sm font-medium text-gray-700 pl-1">Blank</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. Bottom Section: Recent Documents List (Pure Flex Layout) */}
+      <main className="max-w-4xl mx-auto px-6 py-8">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-base font-medium text-gray-800">Recent documents</h3>
         </div>
 
-      </main>
-    </div>
-  )
-}
+        {/* Fallback Empty State */}
+        {documents.length === 0 && (
+          <div className="text-center py-12 border border-dashed border-gray-300 rounded-lg bg-white text-gray-500 text-sm">
+            No documents yet. Click "Blank" to create one.
+          </div>
+        )}
 
-export default DashBoard
+        {/* Pure Tailwind Card Row System */}
+        <div className="space-y-1">
+          {documents.map((doc) => (
+            <div
+              key={doc.id}
+              onClick={() => onOpenDocument(doc.id)}
+              className="flex items-center justify-between bg-white px-4 py-3 border border-gray-200 rounded-md hover:border-blue-400 hover:bg-blue-50/30 cursor-pointer transition-all shadow-sm"
+            >
+              {/* Left Side: Icon & Title Info */}
+              <div className="flex items-center space-x-4 min-w-0 flex-1">
+                <FileTextOutlined className="text-blue-500 text-lg flex-shrink-0" />
+                <span className="font-medium text-gray-800 truncate text-sm sm:text-base hover:text-blue-600">
+                  {doc.title}
+                </span>
+              </div>
+
+              {/* Right Side: Timestamp & Actions metadata */}
+              <div className="flex items-center space-x-8 flex-shrink-0 ml-4">
+                <div className="flex items-center space-x-1.5 text-xs text-gray-400">
+                  <ClockCircleOutlined />
+                  <span>{doc.updatedAt}</span>
+                </div>
+                
+                {/* Visual menu placeholder button to match Google Docs design */}
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevents row click navigation trigger
+                    alert('Menu options coming soon!');
+                  }}
+                  className="p-1 rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  <MoreOutlined className="text-lg" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </main>
+
+    </div>
+  );
+}
