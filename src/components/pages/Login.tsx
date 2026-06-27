@@ -3,13 +3,14 @@
 import React from 'react';
 import { Form, Input, Button, Card, Typography, Alert, FormInstance } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { LoginInput } from '@/src/schemas/user.schema';
 
 const { Title, Text } = Typography;
 
 // Define strict TypeScript types for our UI props
 interface LoginUIProps {
-  form: FormInstance;
-  onFinish: (values: any) => void;
+  form: FormInstance<LoginInput>;
+  onFinish: (values: LoginInput) => void;
   loading: boolean;
   errorMsg: string;
 }
@@ -20,7 +21,7 @@ export default function Login({ form, onFinish, loading, errorMsg }: LoginUIProp
       <Card className="w-full max-w-md shadow-md border border-gray-100">
         <div className="text-center mb-6">
           <Title level={3} style={{ marginBottom: 4 }}>Sign In</Title>
-          <Text type="secondary">Enter your username and password to log in</Text>
+          <Text type="secondary">Enter your email and password to log in</Text>
         </div>
 
         {errorMsg && (
@@ -35,13 +36,16 @@ export default function Login({ form, onFinish, loading, errorMsg }: LoginUIProp
           onFinish={onFinish}
         >
           <Form.Item
-            label="Username"
-            name="username"
-            rules={[{ required: true, message: 'Please input your username!' }]}
+            label="Email"
+            name="email"
+            rules={[{ required: true, message: 'Please input your email!' },  {
+      type: "email",
+      message: "Please enter a valid email!",
+    },]}
           >
             <Input 
               prefix={<UserOutlined className="text-gray-400" />} 
-              placeholder="Username" 
+              placeholder="Email" 
               size="large"
             />
           </Form.Item>

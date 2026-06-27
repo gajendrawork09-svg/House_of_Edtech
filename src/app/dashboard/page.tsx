@@ -1,4 +1,4 @@
-import DashBoardClient from "@/components/pages/DashBoardClient";
+import DashBoardClient from "@/src/components/pages/DashBoardClient";
 import { auth } from "@/src/auth";
 import { redirect } from "next/navigation";
 

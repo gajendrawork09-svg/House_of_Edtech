@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import  { useState } from "react";
 import { Form, message } from "antd";
-import Login from "@/components/pages/Login";
+import Login from "@/src/components/pages/Login";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 

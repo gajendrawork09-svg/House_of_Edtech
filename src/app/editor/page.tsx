@@ -1,5 +1,5 @@
 
-import Editior from '@/components/Ui/Editor/Editor'
+import Editior from '@/src/components/Ui/Editor/Editor'
 import React from 'react'
 
 const page = () => {

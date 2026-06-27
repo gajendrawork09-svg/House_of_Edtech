@@ -1,5 +1,8 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import UserService from "./services/user.service";
+
+const userService = new UserService();
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -10,13 +13,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
 
       async authorize(credentials) {
-        // We will connect Prisma later
+        if (!credentials?.email || !credentials?.password) {
+          return null;
+        }
 
-        return {
-          id: "1",
-          name: "Sunny",
-          email: credentials?.email as string,
-        };
+        return await userService.login(
+          credentials.email as string,
+          credentials.password as string
+        );
       },
     }),
   ],
