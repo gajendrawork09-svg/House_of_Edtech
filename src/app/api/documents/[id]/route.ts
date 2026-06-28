@@ -1,4 +1,5 @@
 import { auth } from "@/src/auth";
+import { updateDocumentSchema } from "@/src/schemas/document.schema";
 import { DocumentService } from "@/src/services/document.service";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -57,4 +58,34 @@ export async function GET(
       }
     );
   }
+}
+
+export async function PATCH(
+  request: NextRequest,
+  { params }: RouteProps
+) {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return NextResponse.json(
+      { success: false },
+      { status: 401 }
+    );
+  }
+
+  const { id } = await params;
+
+  const body = await request.json();
+
+  const data = updateDocumentSchema.parse(body);
+
+  await documentService.updateDocument(
+    id,
+    session.user.id,
+    data
+  );
+
+  return NextResponse.json({
+    success: true,
+  });
 }

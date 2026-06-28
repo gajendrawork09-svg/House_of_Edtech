@@ -1,5 +1,5 @@
 import { DocumentRepository } from "../repositories/document.repository";
-import { CreateDocumentInput } from "../schemas/document.schema";
+import { CreateDocumentInput, UpdateDocumentInput } from "../schemas/document.schema";
 
 export class DocumentService {
   private repository = new DocumentRepository();
@@ -22,4 +22,22 @@ async getDocumentById(id: string) {
 
   return document;
 }
+async updateDocument(
+  id: string,
+  ownerId: string,
+  data: UpdateDocumentInput
+) {
+  const result = await this.repository.update(
+    id,
+    ownerId,
+    data
+  );
+
+  if (result.count === 0) {
+    throw new Error("Document not found");
+  }
+
+  return result;
+}
+
 }

@@ -1,5 +1,5 @@
 import prisma from "../lib/prisma";
-import { CreateDocumentInput } from "../schemas/document.schema";
+import { CreateDocumentInput, UpdateDocumentInput } from "../schemas/document.schema";
 
 
 
@@ -52,4 +52,34 @@ async findById(id: string) {
     },
   });
 }
+async update(
+  id: string,
+  ownerId: string,
+  data: UpdateDocumentInput
+) {
+  return prisma.document.updateMany({
+    where: {
+      id,
+      ownerId,
+    },
+    data: {
+      title: data.title,
+      content: data.content,
+    },
+  });
+}
+
+
+async findOwnedDocument(
+  documentId: string,
+  ownerId: string
+) {
+  return prisma.document.findFirst({
+    where: {
+      id: documentId,
+      ownerId,
+    },
+  });
+}
+
 }
