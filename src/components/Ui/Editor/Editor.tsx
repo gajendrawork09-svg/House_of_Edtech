@@ -7,32 +7,84 @@ import EditorContent from "./EditorContent";
 import { useEditor } from "@tiptap/react";
 import VersionHistoryDrawer from "./VersionHistoryDrawer";
 import Footer from "../Footer/Footer";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { getDocumentById, updateDocument } from "@/src/lib/api/document.api";
 import { useAutoSave } from "@/src/hooks/useAutoSave";
+import { getSocket } from "@/src/socket/client";
+import { SOCKET_EVENTS } from "@/src/socket/event";
+
 interface EditorProps {
   documentId: string;
 }
 const Editior = ({ documentId }: EditorProps) => {
+  const isRemoteUpdate = useRef(false);
+  const socket = useMemo(() => getSocket(), []);
   const [title, setTitle] = useState("");
+
   const editor = useEditor({
     extensions: [StarterKit],
     content: "",
     immediatelyRender: false,
-    editable : documentId ? true : false,
-    onUpdate: () => {
-    triggerSave();
-  },
+    editable: documentId ? true : false,
+    onUpdate: ({ editor }) => {
+      if (isRemoteUpdate.current) {
+        return;
+    }
+
+    socket.emit(
+        SOCKET_EVENTS.DOCUMENT_CHANGE,
+        {
+            documentId,
+            content: editor.getJSON(),
+        }
+    );
+
+      triggerSave();
+    },
   });
 
-const { status , triggerSave} = useAutoSave({
-  documentId,
-  title,
-  editor, // Set to true to trigger save on every update
-});
-useEffect(() => {
-  triggerSave();
-}, [title, triggerSave]);
+  const { status, triggerSave } = useAutoSave({
+    documentId,
+    title,
+    editor,
+  });
+
+  useEffect(() => {
+    if (!editor) return;
+
+    socket.on(SOCKET_EVENTS.DOCUMENT_CHANGE, ({ content }) => {
+      if (!editor) return;
+
+      isRemoteUpdate.current = true;
+
+      editor.commands.setContent(content);
+
+      setTimeout(() => {
+        isRemoteUpdate.current = false;
+      }, 0);
+    });
+
+    return () => {
+      socket.off(SOCKET_EVENTS.DOCUMENT_CHANGE);
+    };
+  }, [editor]);
+
+  useEffect(() => {
+    socket.connect();
+    socket.emit(SOCKET_EVENTS.JOIN_DOCUMENT, {
+      documentId,
+    });
+    return () => {
+      socket.emit(SOCKET_EVENTS.LEAVE_DOCUMENT, {
+        documentId,
+      });
+      socket.disconnect();
+    };
+  }, [documentId]);
+
+  useEffect(() => {
+    triggerSave();
+  }, [title, triggerSave]);
 
   useEffect(() => {
     const fetchDocument = async () => {
@@ -69,11 +121,11 @@ useEffect(() => {
   return (
     <div className="min-h-screen bg-slate-100">
       <EditorHeader
-      documentId={documentId}
+        documentId={documentId}
         title={title}
         onTitleChange={setTitle}
         // onSave={handleSave}
-          saveStatus={status}
+        saveStatus={status}
       />
       <EditorToolbar />
       <div className="flex">
