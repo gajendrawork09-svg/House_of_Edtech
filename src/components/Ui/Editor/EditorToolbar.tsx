@@ -35,7 +35,8 @@ const EditorToolbar = () => {
         icon={<RedoOutlined />}
       />
 
-      <Divider type="vertical" />
+      {/* <Divider type="vertical" /> */}
+      <div className="mx-2 h-5 w-px bg-gray-300" />
 
       {/* Formatting */}
 
@@ -59,7 +60,8 @@ const EditorToolbar = () => {
         icon={<StrikethroughOutlined />}
       />
 
-      <Divider type="vertical" />
+      {/* <Divider type="vertical" /> */}
+      <div className="mx-2 h-5 w-px bg-gray-300" />
 
       {/* Lists */}
 
@@ -73,7 +75,8 @@ const EditorToolbar = () => {
         icon={<OrderedListOutlined />}
       />
 
-      <Divider type="vertical" />
+      {/* <Divider type="vertical" /> */}
+      <div className="mx-2 h-5 w-px bg-gray-300" />
 
       {/* Link */}
 

@@ -58,7 +58,7 @@ const VersionHistoryDrawer = () => {
           </Title>
         </div>
 
-        <Space direction="vertical" size="middle" className="w-full">
+        <Space orientation="vertical" size="middle" className="w-full">
           {versions.map((version) => (
             <Card
               key={version.id}
