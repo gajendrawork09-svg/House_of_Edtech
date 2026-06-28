@@ -14,7 +14,6 @@ export class DocumentService {
   return this.repository.findAllByOwner(ownerId);
 }
 async getDocumentById(id: string) {
-  console.log("Fetching document with ID:", id); // Debugging line
   const document = await this.repository.findById(id);
 
   if (!document) {
@@ -25,20 +24,22 @@ async getDocumentById(id: string) {
 }
 async updateDocument(
   id: string,
-  ownerId: string,
+  userId: string,
   data: UpdateDocumentInput
 ) {
-  const result = await this.repository.update(
-    id,
-    ownerId,
-    data
-  );
+  const document =
+    await this.repository.canEditDocument(
+      id,
+      userId
+    );
 
-  if (result.count === 0) {
-    throw new Error("Document not found");
+  if (!document) {
+    throw new Error(
+      "You don't have permission to edit this document."
+    );
   }
 
-  return result;
+  return this.repository.update(id, data);
 }
 
 }

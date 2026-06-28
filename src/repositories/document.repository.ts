@@ -54,13 +54,11 @@ async findById(id: string) {
 }
 async update(
   id: string,
-  ownerId: string,
   data: UpdateDocumentInput
 ) {
-  return prisma.document.updateMany({
+  return prisma.document.update({
     where: {
       id,
-      ownerId,
     },
     data: {
       title: data.title,
@@ -69,7 +67,32 @@ async update(
   });
 }
 
-
+async canEditDocument(
+  documentId: string,
+  userId: string
+) {
+  return prisma.document.findFirst({
+    where: {
+      id: documentId,
+      OR: [
+        {
+          ownerId: userId,
+        },
+        {
+          sharedWith: {
+            some: {
+              userId,
+              permission: "EDIT",
+            },
+          },
+        },
+      ],
+    },
+    select: {
+      id: true,
+    },
+  });
+}
 async findOwnedDocument(
   documentId: string,
   ownerId: string
@@ -78,6 +101,30 @@ async findOwnedDocument(
     where: {
       id: documentId,
       ownerId,
+    },
+  });
+}
+
+async hasEditPermission(
+  documentId: string,
+  userId: string
+) {
+  return prisma.document.findFirst({
+    where: {
+      id: documentId,
+      OR: [
+        {
+          ownerId: userId,
+        },
+        {
+          sharedWith: {
+            some: {
+              userId,
+              permission: "EDIT",
+            },
+          },
+        },
+      ],
     },
   });
 }
