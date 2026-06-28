@@ -8,6 +8,6 @@ interface PageProps {
 
 export default async function Page({ params }: PageProps) {
   const { id } = await params;
-console.log("Document ID:", id); // Log the document ID to the console
+
   return <Editior documentId={id} />;
 }

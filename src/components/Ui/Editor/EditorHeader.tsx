@@ -28,7 +28,8 @@ interface EditorHeaderProps {
   documentId: string;
   title: string;
   onTitleChange: (title: string) => void;
-  onSave: () => void;
+  // onSave: () => void;
+  saveStatus: "saved" | "saving" | "error";
 }
 
 const menuItems = [
@@ -52,7 +53,8 @@ const EditorHeader = ({
   documentId,
   title,
   onTitleChange,
-  onSave,
+  // onSave,
+  saveStatus,
 }: EditorHeaderProps) => {
   const [isShareOpen, setIsShareOpen] = useState(false);
 
@@ -81,7 +83,7 @@ const EditorHeader = ({
     try {
       setLoading(true);
 
-      await shareDocument(documentId, { email: selectedEmail, permission, });
+      await shareDocument(documentId, { email: selectedEmail, permission });
 
       message.success("Document shared successfully.");
 
@@ -111,11 +113,30 @@ const EditorHeader = ({
             />
 
             <div className="flex items-center gap-4">
-              <Button size="small" type="primary" onClick={onSave}>
-                Save
-              </Button>
+              <Text type="secondary">
+                <Space>
+                  {saveStatus === "saving" && (
+                    <>
+                      <Badge status="processing" />
+                      <Text>Saving...</Text>
+                    </>
+                  )}
 
-              <Text type="secondary">Last edited 2 minutes ago</Text>
+                  {saveStatus === "saved" && (
+                    <>
+                      <Badge status="success" />
+                      <Text>Saved</Text>
+                    </>
+                  )}
+
+                  {saveStatus === "error" && (
+                    <>
+                      <Badge status="error" />
+                      <Text>Failed to save</Text>
+                    </>
+                  )}
+                </Space>{" "}
+              </Text>
             </div>
           </div>
         </div>
