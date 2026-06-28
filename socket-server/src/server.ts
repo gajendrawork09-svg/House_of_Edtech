@@ -2,7 +2,8 @@ import express from "express";
 import http from "http";
 import { Server } from "socket.io";
 import { SOCKET_EVENTS } from "./event";
-
+import dotenv from 'dotenv';
+dotenv.config();
 const app = express();
 
 const server = http.createServer(app);
@@ -53,6 +54,6 @@ socket.on(
 );
 });
 
-server.listen(3001, () => {
-  console.log("Socket Server Running on 3001");
+server.listen(process.env.PORT || 3001, () => {
+  console.log(`Socket Server Running on ${process.env.PORT}`);
 });
