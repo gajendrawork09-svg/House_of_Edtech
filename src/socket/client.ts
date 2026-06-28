@@ -4,7 +4,7 @@ let socket: Socket | null = null;
 
 export const getSocket = () => {
   if (!socket) {
-    socket = io("https://house-of-edtech-j8s6.onrender.com", {
+    socket = io(process.env.SOCKET_URL, {
       transports: ["websocket"],
       autoConnect: false,
     });
