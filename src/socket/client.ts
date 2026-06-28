@@ -4,7 +4,7 @@ let socket: Socket | null = null;
 
 export const getSocket = () => {
   if (!socket) {
-    socket = io(process.env.SOCKET_URL, {
+    socket = io(process.env.SOCKET_URL , {
       transports: ["websocket"],
       autoConnect: false,
     });
