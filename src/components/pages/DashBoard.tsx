@@ -13,14 +13,16 @@ interface DocumentItem {
 }
 
 interface DashboardUIProps {
-  documents: DocumentItem[];
+   myDocuments: any[];
+  sharedDocuments: any[];
   onCreateDocument: () => void;
   onOpenDocument: (id: string) => void;
   isCreating: boolean;
 }
 
 export default function DashBoard({
-  documents,
+  myDocuments,
+  sharedDocuments,
   onCreateDocument,
   onOpenDocument,
   isCreating
@@ -71,11 +73,11 @@ export default function DashBoard({
       {/* 3. Bottom Section: Recent Documents List (Pure Flex Layout) */}
       <main className="max-w-4xl mx-auto px-6 py-8">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-base font-medium text-gray-800">Recent documents</h3>
+          <h3 className="text-base font-medium text-gray-800">Share documents</h3>
         </div>
 
         {/* Fallback Empty State */}
-        {documents.length === 0 && (
+        {myDocuments.length === 0 && sharedDocuments.length === 0 && (
           <div className="text-center py-12 border border-dashed border-gray-300 rounded-lg bg-white text-gray-500 text-sm">
             No documents yet. Click "Blank" to create one.
           </div>
@@ -83,7 +85,53 @@ export default function DashBoard({
 
         {/* Pure Tailwind Card Row System */}
         <div className="space-y-1">
-          {documents.map((doc) => (
+          {sharedDocuments.map((doc) => (
+            <div
+              key={doc.id}
+              onClick={() => onOpenDocument(doc.id)}
+              className="flex items-center justify-between bg-white px-4 py-3 border border-gray-200 rounded-md hover:border-blue-400 hover:bg-blue-50/30 cursor-pointer transition-all shadow-sm"
+            >
+              {/* Left Side: Icon & Title Info */}
+              <div className="flex items-center space-x-4 min-w-0 flex-1">
+                <FileTextOutlined className="text-blue-500 text-lg flex-shrink-0" />
+                <span className="font-medium text-gray-800 truncate text-sm sm:text-base hover:text-blue-600">
+                  {doc.title}
+                </span>
+              </div>
+
+              {/* Right Side: Timestamp & Actions metadata */}
+              <div className="flex items-center space-x-8 flex-shrink-0 ml-4">
+                <div className="flex items-center space-x-1.5 text-xs text-gray-400">
+                  <ClockCircleOutlined />
+                  <span>{doc.updatedAt}</span>
+                </div>
+                
+                {/* Visual menu placeholder button to match Google Docs design */}
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevents row click navigation trigger
+                    alert('Menu options coming soon!');
+                  }}
+                  className="p-1 rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  <MoreOutlined className="text-lg" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+         <div className="flex items-center justify-between mb-4 mt-4">
+          <h3 className="text-base font-medium text-gray-800">Recent documents</h3>
+        </div>
+        {myDocuments.length === 0 && sharedDocuments.length === 0 && (
+          <div className="text-center py-12 border border-dashed border-gray-300 rounded-lg bg-white text-gray-500 text-sm">
+            No documents yet. Click "Blank" to create one.
+          </div>
+        )}
+
+        {/* Pure Tailwind Card Row System */}
+        <div className="space-y-1">
+          {myDocuments.map((doc) => (
             <div
               key={doc.id}
               onClick={() => onOpenDocument(doc.id)}

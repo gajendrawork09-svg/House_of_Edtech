@@ -14,6 +14,7 @@ export class DocumentService {
   return this.repository.findAllByOwner(ownerId);
 }
 async getDocumentById(id: string) {
+  console.log("Fetching document with ID:", id); // Debugging line
   const document = await this.repository.findById(id);
 
   if (!document) {

@@ -22,4 +22,38 @@ export class UserRepository {
       },
     });
   }
+  
+  async searchUsers(
+  search: string,
+  currentUserId: string
+) {
+  return prisma.user.findMany({
+    where: {
+      id: {
+        not: currentUserId,
+      },
+      OR: [
+        {
+          username: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+        {
+          email: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+      ],
+    },
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      image: true,
+    },
+    take: 10,
+  });
+}
 }

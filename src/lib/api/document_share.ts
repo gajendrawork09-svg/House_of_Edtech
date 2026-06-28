@@ -25,3 +25,15 @@ export const shareDocument = async (
   return data;
 };
 
+export const getSharedDocuments = async () => {
+  const response = await fetch("/api/documents/share");
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message);
+  }
+
+  return data;
+};
+

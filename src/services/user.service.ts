@@ -46,4 +46,13 @@ export default class UserService {
       email: user.email,
     };
   }
+  async searchUsers(
+  search: string,
+  currentUserId: string
+) {
+  return this.repository.searchUsers(
+    search,
+    currentUserId
+  );
+}
 }

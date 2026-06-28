@@ -1,7 +1,6 @@
-
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Avatar,
   Badge,
@@ -21,7 +20,7 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { shareDocument } from "@/src/lib/api/document_share";
-
+import { searchUsers } from "@/src/lib/api/user.api";
 
 const { Text } = Typography;
 
@@ -43,7 +42,12 @@ const menuItems = [
     danger: true,
   },
 ];
-
+interface UserOption {
+  id: string;
+  username: string;
+  email: string;
+  image?: string | null;
+}
 const EditorHeader = ({
   documentId,
   title,
@@ -52,26 +56,35 @@ const EditorHeader = ({
 }: EditorHeaderProps) => {
   const [isShareOpen, setIsShareOpen] = useState(false);
 
-  const [email, setEmail] = useState("");
-
-  const [permission, setPermission] = useState<"VIEW" | "EDIT">(
-    "VIEW"
-  );
+  const [users, setUsers] = useState<UserOption[]>([]);
+  const [selectedEmail, setSelectedEmail] = useState("");
+  const [searchValue, setSearchValue] = useState("");
+  const [permission, setPermission] = useState<"VIEW" | "EDIT">("VIEW");
 
   const [loading, setLoading] = useState(false);
-
+  useEffect(() => {
+    const delay = setTimeout(async () => {
+      if (!searchValue.trim()) {
+        setUsers([]);
+        return;
+      }
+      try {
+        const response = await searchUsers(searchValue);
+        setUsers(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    }, 300);
+    return () => clearTimeout(delay);
+  }, [searchValue]);
   const handleShare = async () => {
     try {
       setLoading(true);
 
-      await shareDocument(documentId, {
-        email,
-        permission,
-      });
+      await shareDocument(documentId, { email: selectedEmail, permission, });
 
       message.success("Document shared successfully.");
 
-      setEmail("");
       setPermission("VIEW");
       setIsShareOpen(false);
     } catch (error: any) {
@@ -84,13 +97,8 @@ const EditorHeader = ({
   return (
     <>
       <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b bg-white px-6">
-
         <div className="flex items-center gap-4">
-
-          <Button
-            type="text"
-            icon={<ArrowLeftOutlined />}
-          >
+          <Button type="text" icon={<ArrowLeftOutlined />}>
             Dashboard
           </Button>
 
@@ -98,33 +106,21 @@ const EditorHeader = ({
             <Input
               variant="borderless"
               value={title}
-              onChange={(e) =>
-                onTitleChange(e.target.value)
-              }
+              onChange={(e) => onTitleChange(e.target.value)}
               className="text-xl font-semibold"
             />
 
             <div className="flex items-center gap-4">
-
-              <Button
-                size="small"
-                type="primary"
-                onClick={onSave}
-              >
+              <Button size="small" type="primary" onClick={onSave}>
                 Save
               </Button>
 
-              <Text type="secondary">
-                Last edited 2 minutes ago
-              </Text>
-
+              <Text type="secondary">Last edited 2 minutes ago</Text>
             </div>
           </div>
-
         </div>
 
         <Space size="middle">
-
           <Badge status="success" text="Synced" />
 
           <Avatar
@@ -142,15 +138,9 @@ const EditorHeader = ({
             Share
           </Button>
 
-          <Dropdown
-            menu={{ items: menuItems }}
-          >
-            <Button
-              shape="circle"
-              icon={<MoreOutlined />}
-            />
+          <Dropdown menu={{ items: menuItems }}>
+            <Button shape="circle" icon={<MoreOutlined />} />
           </Dropdown>
-
         </Space>
       </header>
 
@@ -162,23 +152,33 @@ const EditorHeader = ({
         confirmLoading={loading}
         okText="Share"
       >
-        <Space
-          direction="vertical"
-          style={{ width: "100%" }}
-        >
-          <Input
-            placeholder="Enter user email"
-            value={email}
-            onChange={(e) =>
-              setEmail(e.target.value)
-            }
+        <Space direction="vertical" style={{ width: "100%" }}>
+          <Select
+            showSearch
+            placeholder="Search user by name or email"
+            value={selectedEmail || undefined}
+            filterOption={false}
+            onSearch={setSearchValue}
+            onChange={setSelectedEmail}
+            style={{ width: "100%" }}
+            options={users.map((user) => ({
+              value: user.email,
+              label: (
+                <div className="flex flex-col">
+                  {" "}
+                  <span className="font-medium">{user.username}</span>{" "}
+                  <span className="text-xs text-gray-500">
+                    {" "}
+                    {user.email}{" "}
+                  </span>{" "}
+                </div>
+              ),
+            }))}
           />
 
           <Select
             value={permission}
-            onChange={(value) =>
-              setPermission(value)
-            }
+            onChange={(value) => setPermission(value)}
             options={[
               {
                 label: "View",

@@ -64,4 +64,16 @@ export class DocumentShareService {
       data.permission
     );
   }
+
+  async getSharedDocuments(userId: string) {
+  const shares = await this.shareRepository.getSharedDocuments(userId);
+
+  return shares.map((share) => ({
+    id: share.document.id,
+    title: share.document.title,
+    updatedAt: share.document.updatedAt,
+    permission: share.permission,
+    owner: share.document.owner,
+  }));
+}
 }
