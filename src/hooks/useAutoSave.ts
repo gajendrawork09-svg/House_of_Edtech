@@ -2,6 +2,7 @@ import { useCallback, useRef, useState } from "react";
 import { Editor } from "@tiptap/react";
 
 import { updateDocument } from "@/src/lib/api/document.api";
+import { savePendingDocument } from "../offline-sync/queue";
 
 export type SaveStatus =
   | "saved"
@@ -35,6 +36,19 @@ export const useAutoSave = ({
       try {
         setStatus("saving");
 
+        if (!navigator.onLine) {
+
+    await savePendingDocument({
+        documentId,
+        title,
+        content: editor.getJSON(),
+        updatedAt: Date.now(),
+    });
+
+    setStatus("saved");
+
+    return;
+}
         await updateDocument(documentId, {
           title,
           content: editor.getJSON(),

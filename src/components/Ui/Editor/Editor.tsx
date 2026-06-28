@@ -12,6 +12,7 @@ import { getDocumentById, updateDocument } from "@/src/lib/api/document.api";
 import { useAutoSave } from "@/src/hooks/useAutoSave";
 import { getSocket } from "@/src/socket/client";
 import { SOCKET_EVENTS } from "@/src/socket/event";
+import { syncPendingDocuments } from "@/src/offline-sync/sync";
 
 interface EditorProps {
   documentId: string;
@@ -20,6 +21,8 @@ const Editior = ({ documentId }: EditorProps) => {
   const isRemoteUpdate = useRef(false);
   const socket = useMemo(() => getSocket(), []);
   const [title, setTitle] = useState("");
+  const [online, setOnline] =
+useState(navigator.onLine);
 
   const editor = useEditor({
     extensions: [StarterKit],
@@ -48,6 +51,19 @@ const Editior = ({ documentId }: EditorProps) => {
     title,
     editor,
   });
+  useEffect(() => {
+
+window.addEventListener(
+"online",
+()=>setOnline(true)
+);
+
+window.addEventListener(
+"offline",
+()=>setOnline(false)
+);
+
+}, []);
 
   useEffect(() => {
     if (!editor) return;
@@ -104,6 +120,31 @@ const Editior = ({ documentId }: EditorProps) => {
     }
   }, [editor, documentId]);
 
+  useEffect(() => {
+
+    const handleOnline = async () => {
+
+        console.log("Back Online");
+
+        await syncPendingDocuments();
+
+    };
+
+    window.addEventListener(
+        "online",
+        handleOnline
+    );
+
+    return () => {
+
+        window.removeEventListener(
+            "online",
+            handleOnline
+        );
+
+    };
+
+}, []);
   // const handleSave = async () => {
   //   if (!editor) return;
 
