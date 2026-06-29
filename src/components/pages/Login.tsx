@@ -18,6 +18,22 @@ interface LoginUIProps {
 export default function Login({ form, onFinish, loading, errorMsg }: LoginUIProps) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4">
+
+      <div className="">
+        Dummy user credentials for testing:
+        <div className="mt-2">
+          <Text strong>Email:</Text> <Text code>gajendra@gmail.com</Text>
+        </div>
+        <div className="mt-1">
+          <Text strong>Password:</Text> <Text code>password123</Text>
+        </div>
+        <div className="mt-2">
+          <Text strong>Email:</Text> <Text code>ranveer@gmail.com</Text>
+        </div>
+        <div className="mt-1">
+          <Text strong>Password:</Text> <Text code>password123</Text>
+        </div>
+      </div>
       <Card className="w-full max-w-md shadow-md border border-gray-100">
         <div className="text-center mb-6">
           <Title level={3} style={{ marginBottom: 4 }}>Sign In</Title>
