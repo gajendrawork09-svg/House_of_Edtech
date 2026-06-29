@@ -16,7 +16,7 @@ const Footer = () => {
         </Text>
 
         <Link
-          href="https://github.com/your-github-username"
+          href="https://github.com/gajendrawork09-svg/house_of_edtech_socket"
           target="_blank"
           className="flex items-center gap-2"
         >
